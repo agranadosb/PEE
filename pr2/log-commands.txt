@@ -1,0 +1,3 @@
+PCFGs/scfg-toolkit/scfg_learn -g PCFGs/MODELS/G-0 -f PCFGs/triangles-algorithms/results/right -i 100 -m PCFGs/DATA/Tr-right -l 
+PCFGs/scfg-toolkit/scfg_learn -g PCFGs/MODELS/G-0 -f PCFGs/triangles-algorithms/results/isoc -i 100 -m PCFGs/DATA/Tr-isoc -l 
+PCFGs/scfg-toolkit/scfg_learn -g PCFGs/MODELS/G-0 -f PCFGs/triangles-algorithms/results/equil -i 100 -m PCFGs/DATA/Tr-equil -l 

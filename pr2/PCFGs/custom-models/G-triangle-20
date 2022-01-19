@@ -1,0 +1,28 @@
+NonTerminals 20
+S
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+T
+
+Terminals 3
+b
+g
+d
+
+Rules

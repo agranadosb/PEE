@@ -1,0 +1,13 @@
+NonTerminals 5
+S
+A
+B
+C
+D
+
+Terminals 3
+b
+g
+d
+
+Rules
