@@ -86,12 +86,12 @@ datasets = [
 
 commands_file = os.path.join(base_folder, 'log-commands.txt')
 
-for tr, ts in datasets:
+for index, (tr, ts) in enumerate(datasets):
     processes = []
-    command = f"{dataset_creation_command} -F 0 -c {length} -l 2 -L 10 > {tr}"
+    command = f"{dataset_creation_command} -F {index} -c {length} -l 2 -L 10 > {tr}"
     processes.append(create_process(command, commands_file, f'Creating right dataset with {length}'))
     logging.debug(command)
-    command = f"{dataset_creation_command} -F 1 -c {length} -l 2 -L 10 > {ts}"
+    command = f"{dataset_creation_command} -F {index} -c {length} -l 2 -L 10 > {ts}"
     processes.append(create_process(command, commands_file, f'Creating equi dataset with {length}'))
     logging.debug(command)
     launch_jobs(processes)
@@ -107,12 +107,12 @@ for tr, ts in datasets:
         tr_file.write(tr_data)
         ts_file.write(ts_data)
 
-for tr, ts in datasets_b:
+for index, (tr, ts) in enumerate(datasets_b):
     processes = []
-    command = f"{dataset_creation_command} -F 0 -c {length} -l 2 -L 10 > {tr}"
+    command = f"{dataset_creation_command} -F {index} -c {length} -l 2 -L 10 > {tr}"
     processes.append(create_process(command, commands_file, f'Creating right dataset with {length}'))
     logging.debug(command)
-    command = f"{dataset_creation_command} -F 1 -c {length} -l 2 -L 10 > {ts}"
+    command = f"{dataset_creation_command} -F {index} -c {length} -l 2 -L 10 > {ts}"
     processes.append(create_process(command, commands_file, f'Creating equi dataset with {length}'))
     logging.debug(command)
     launch_jobs(processes)
