@@ -1,0 +1,12 @@
+function abs(v) {return v < 0 ? -v : v}
+{
+  bs = gsub(/b/, "", $0);
+  gs = gsub(/g/, "", $0);
+  ds = gsub(/d/, "", $0);
+  printf("b=%d d=%d g=%d",bs,ds,gs);
+  di = bs + ds - gs;
+  if (bs==0 || gs==0 || ds==0)
+    printf(" N\n");
+  else
+    if (di==0) printf(" Y\n"); else printf(" N\n");
+}

@@ -1,0 +1,49 @@
+Here we briefly describe how to use the available software.
+
+In this directory you can find the "gr_src" file which
+contains the SCFG which is described in [Pereira,92].
+
+1. We generate a bracketed sample.
+
+   ../scfg_gstr -g gr_src -c 100 -p "[ ]" > sample
+
+2. We adequately separate the brackets in the "sample" file.
+
+   sed  -e s'/\[/ \[ /g' -e s'/\]/ \] /g' sample | \
+   sed s'/ \+/ /g' > tmpsample
+   mv tmpsample sample
+
+3. We construct a SCFG.
+
+   ../scfg_cgr -g gr_src -f gr_new
+
+4. We train this SCFG with the Inside-Outside algorithm.
+
+   ../scfg_learn -g gr_new -s sample -i 200
+ 
+   This program can take some time.
+
+5. We eliminate the brackets from the sample.
+
+   sed  -e s'/\[//g' -e s'/\]//g' sample | sed s'/ \+/ /g' > tmpsample
+   mv tmpsample sample
+
+6. We compute the probability of each string according to the
+   estimated grammar.
+
+   ../scfg_prob -g gr_new -m sample
+
+7. Now, we train the SCFG with the Inside-Outside algorithm but
+   without brackets in the sample.This program can take some
+   time. Finally, we compute the probability of each string according
+   to the estimated grammar.
+
+   ../scfg_cgr -g gr_src -f gr_new
+   ../scfg_learn -g gr_new -s sample -i 200
+   ../scfg_prob -g gr_new -m sample
+
+- F. Pereira and Y. Schabes, "Inside-Outside Reestimation from
+  Partially Bracketed Corpora", Proceedings of the 30th Annual Meeting
+  of the Association for Computational Linguistics, 128--135, 1992.
+
+========================================================================

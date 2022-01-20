@@ -1,0 +1,20 @@
+NonTerminals 5
+S
+C
+D
+A
+B
+
+Terminals 2
+a
+b
+
+Reglas
+0.4 S --> A C
+0.4 S --> B D
+0.1 S --> A A
+0.1 S --> B B
+1.0 C --> S A
+1.0 D --> S B
+1.0 A --> a
+1.0 B --> b

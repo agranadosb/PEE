@@ -1,0 +1,100 @@
+INTRODUCTION
+------------
+
+This experimental software can be used in order to estimate the
+probabilities of a Stochastic Context Free Grammar (SCFG). All 
+programs have a small help which is obtained by typing the name
+of the program. All programs have been tested only on a linux
+platform. Migration to other platforms can be easily performed.
+
+INSTALLATION
+------------
+
+Uncompress the compress file:
+
+tar zvf scfg.tgz
+
+Enter to the new directory and compile the programs:
+
+cd SCFG
+make
+
+PROGRAMS
+--------
+
+scfg_cgr -> It creates a SCFG in CNF composed by the maximum number of
+            rules which can be composed by a set of non-terminals and
+            a set of terminals. The probabilities are randomly generated.
+
+scfg_gstr -> It generates strings at random by using a SCFG. In order
+            to avoid problems, the grammar must be proper and
+            consistent. No check about the grammar is carried out.
+
+scfg_learn -> It estimes the probabilities of a SCFG by using the IO
+            algorithm or the Viterbi-Score algorithm. The bracketed
+            versions of any of them can be used if parentized
+            strings are available.
+
+            The sample file contains strings of words separeted by
+            white spaces. A string which begins with "#" is
+            considered as a comment. If the sample file contains
+            bracketed strings then the bracketing characters are "["
+            and "]".
+
+            A rule can desappear if it takes null probability in the
+            estimation process. It is possible to avoid this situation
+            by combining the options -s (-S) and -a.
+ 
+            The maximum size of the trellis should be specified in
+            order to optimize the use of space and time. The size of
+            the trellis should be the length of the longest string
+            in the sample.
+
+            The base of the logarithm which is used in order to
+            represent the probabilities (see [Brown, 87]) can be
+            established with the "-b" option. Best precision is
+            obtained when the base is near to 1. Use this option
+            with caution, because the order of the size of the
+            generated table grows linearly with the order of the
+            decimal part. In the following list you can found some
+            examples: 
+
+                1.0001    ->  0.4 MB 
+                1.00005   ->  0.8 MB
+                1.00001   ->  4.7 MB
+                1.000005  ->  9.8 MB
+                1.000001  -> 55.3 MB
+
+            Use the program with caution, since it takes cubic time
+            with the length of the sample. For full bracketed samples
+            the programs takes linear time.
+
+scfg_prob -> It computes the probability or the probability of the
+            best parse tree of the samples contained in a file
+            according to a SCFG. In addition, it can provide the
+            most probable parse tree.
+
+
+BIBLIOGRAPHY
+------------
+
+- C.S. Wetherell, "Probabilistic Languages: A Review and some Open
+  Questions", Computing Surveys, 12(4), 361--379, 1980.
+
+- P.F. Brown, "The acoustic-Modeling Problem in Automatic Speech
+  Recognition", Ph. D. dissertation, Carnegie-Mellon University, 1987.
+
+- K. Lari and S.J. Young, "The Estimation of Stochastic Context-Free
+  Grammars using the Inside-Outside Algorithm", Computer, Speech and
+  Language, 4, 35--56, 1990.
+
+- F. Pereira and Y. Schabes, "Inside-Outside Reestimation from
+  Partially Bracketed Corpora", Proceedings of the 30th Annual Meeting
+  of the Association for Computational Linguistics, 128--135, 1992.
+
+- J.A. Sánchez and J.M. Benedí, "Consistency of Stochastic
+  Context-Free Grammars from Probabilistic Estimation Based on Growth
+  Transformation", IEEE Trans. Pattern Analysis and Machine
+  Intelligence, 19(9), 1052--1055, 1997.
+
+-------------------------------------------------------------------------

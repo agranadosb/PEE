@@ -1,0 +1,29 @@
+NonTerminals 8
+E
+S
+M
+A
+P
+Q
+U
+V
+
+Terminals 5
+(
+)
++
+x
+a
+
+Reglas
+0.2 E --> E S
+0.2 E --> E M
+0.2 E --> P A
+0.4 E --> a
+1.0 S --> U E
+1.0 M --> V E
+1.0 A --> E Q
+1.0 P --> (
+1.0 Q --> )
+1.0 U --> +
+1.0 V --> x
