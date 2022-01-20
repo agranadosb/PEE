@@ -65,6 +65,8 @@ base_folder = os.path.join(base_dir, 'results-question-9')
 create_remove_folder(base_folder)
 
 commands_file = os.path.join(base_folder, 'log-commands.txt')
+if os.path.exists(commands_file):
+    os.remove(commands_file)
 
 initial_grammar_file = os.path.join(base_dir, 'MODELS/G-0')
 

@@ -37,6 +37,10 @@ create_remove_folder(folder_models)
 folder_data = os.path.join(base_dir, 'DATA')
 result_folder = os.path.join(folder_models, f'result-{non_terminals}')
 
+commands_file = os.path.join(result_folder, 'log-commands.txt')
+if os.path.exists(commands_file):
+    os.remove(commands_file)
+
 result_file = os.path.join(folder_models, f"results-{non_terminals}.txt")
 
 if os.path.exists(result_file):
@@ -63,6 +67,9 @@ os.mkdir(result_folder)
 
 command = f"{generate_first_grammar_command} -g {base_grammar} -f {base_grammar_custom_non_terminals}"
 print(command)
+with open(commands_file, 'a') as logs:
+    print(command, file=logs)
+    logging.info(f"Executing command: {command}")
 stream = os.popen(command)
 output = stream.read()
 
@@ -77,15 +84,24 @@ for iteration in range(iterations):
 
     init = time.time()
     command = f"{learn_command} -g {model_file} -f {output_model_file} -i {1} -m {samples_file} -l"
-    print(command)
+    with open(commands_file, 'a') as logs:
+        print(command, file=logs)
+        logging.info(f"Executing command: {command}")
     stream = os.popen(command)
     log_liklyhood = stream.read()
     fin = time.time() - init
 
     command = f"{test_grammar_command} -g {output_model_file} -c 1000 > tri-test-{iteration}"
+    with open(commands_file, 'a') as logs:
+        print(command, file=logs)
+        logging.info(f"Executing command: {command}")
     stream = os.popen(command)
     output = stream.read()
+
     command = f"awk -f {check_triangle_command} tri-test-{iteration} | grep Y | wc -l"
+    with open(commands_file, 'a') as logs:
+        print(command, file=logs)
+        logging.info(f"Executing command: {command}")
     stream = os.popen(command)
     words = stream.read()
     os.remove(f"tri-test-{iteration}")

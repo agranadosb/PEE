@@ -12,8 +12,8 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
-def execute(command: str) -> str:
-    with open('log-commands.txt', 'a') as logs:
+def execute(command: str, log_file: str) -> str:
+    with open(log_file, 'a') as logs:
         print(command, file=logs)
         logging.info(f"Executing command: {command}")
     stream = os.popen(command)
@@ -55,9 +55,6 @@ if os.path.exists(folder_models):
     shutil.rmtree(folder_models)
 os.mkdir(folder_models)
 
-if os.path.exists('log-commands.txt'):
-    os.remove('log-commands.txt')
-
 learn_command = os.path.join(base_dir, 'scfg-toolkit/scfg_learn')
 prob_command = os.path.join(base_dir, 'scfg-toolkit/scfg_prob')
 confus_command = os.path.join(base_dir, 'scfg-toolkit/confus')
@@ -87,6 +84,10 @@ for model in models:
             shutil.rmtree(folder_results)
         os.mkdir(folder_results)
 
+        commands_file = os.path.join(folder_results, 'log-commands.txt')
+        if os.path.exists(commands_file):
+            os.remove(commands_file)
+
         out_right_model = os.path.join(folder_results, f'right{brackets}')
         out_isoc_model = os.path.join(folder_results, f'isoc{brackets}')
         out_equil_model = os.path.join(folder_results, f'equil{brackets}')
@@ -103,11 +104,11 @@ for model in models:
         def create_line_confus(test_model, name, awk):
             # classify with the trained models and get results in right
             command = f"{prob_command} -g {out_right_model} -m {test_model} > {out_prob_right_model}"
-            p1 = Process(target=execute, args=(command,), name=f'Getting probabilities of right model using {name} test corpus')
+            p1 = Process(target=execute, args=(command, commands_file,), name=f'Getting probabilities of right model using {name} test corpus')
             command = f"{prob_command} -g {out_isoc_model} -m {test_model} > {out_prob_isoc_model}"
-            p2 = Process(target=execute, args=(command,), name=f'Getting probabilities of isoc model using {name} test corpus')
+            p2 = Process(target=execute, args=(command, commands_file,), name=f'Getting probabilities of isoc model using {name} test corpus')
             command = f"{prob_command} -g {out_equil_model} -m {test_model} > {out_prob_equil_model}"
-            p3 = Process(target=execute, args=(command,), name=f'Getting probabilities of equil model using {name} test corpus')
+            p3 = Process(target=execute, args=(command, commands_file,), name=f'Getting probabilities of equil model using {name} test corpus')
 
             launch_jobs([p1, p2, p3])
 
@@ -118,15 +119,15 @@ for model in models:
                 awk,
                 results_file
             )
-            execute(command)
+            execute(command, commands_file)
 
         # train models
         command = f"{learn_command} -g {initial_grammar_file} -f {out_right_model} -i {iterations} -m {training_right_data} -l {model}"
-        p1 = Process(target=execute, args=(command,), name='Learning right model')
+        p1 = Process(target=execute, args=(command, commands_file,), name='Learning right model')
         command = f"{learn_command} -g {initial_grammar_file} -f {out_isoc_model} -i {iterations} -m {training_isoc_data} -l {model}"
-        p2 = Process(target=execute, args=(command,), name='Learning isoc model')
+        p2 = Process(target=execute, args=(command, commands_file,), name='Learning isoc model')
         command = f"{learn_command} -g {initial_grammar_file} -f {out_equil_model} -i {iterations} -m {training_equil_data} -l {model}"
-        p3 = Process(target=execute, args=(command,), name='Learning equil model')
+        p3 = Process(target=execute, args=(command, commands_file,), name='Learning equil model')
 
         launch_jobs([p1, p2, p3])
 
@@ -135,6 +136,6 @@ for model in models:
         create_line_confus(test_equil_data, 'isoc', r'{m=$3;argm="isosc"; if ($1>m) {m=$1;argm="right";} if ($2>m) {m=$2;argm="equil";} printf("isosc %s\n",argm);}')
 
         command = f"cat {results_file} | {confus_command}"
-        confus_output = execute(command)
+        confus_output = execute(command, commands_file)
         with open(results_confus_file, 'w') as result_confus:
             result_confus.write(confus_output)
