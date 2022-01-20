@@ -1,20 +1,43 @@
 import os
 import time
 import shutil
+import argparse
+import logging
+
+logging.basicConfig(
+    format="%(asctime)s %(levelname)-8s %(message)s",
+    level=logging.INFO,
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+parser = argparse.ArgumentParser(description='Executes question 7 of PEE. This scripts generates a results file with the likelyhood, the number of triangles, the time per iteration and the iteration.')
+parser.add_argument('dir', type=str, help='Base directory of PCFG')
+parser.add_argument('-i', '--iterations', default=500, help='Iterations number for model generation')
+parser.add_argument('-nt', '--nterminals', default=20, help='Number of non terminals')
+parser.add_argument('-g', '--grammar', default='G-triangle-5', help='Base grammar name')
+
+args = parser.parse_args()
 
 # Datos
-base_dir = 'PCFGs'
-non_terminals = 20
-iterations = 500
+base_dir = args.dir
+non_terminals = args.nterminals
+iterations = args.iterations
+base_grammar_name = args.grammar
 
-# Tiene que haber una carpeta llamada custom-models
-folder_models = os.path.join(base_dir, 'custom-models')
+def create_remove_folder(folder):
+    if os.path.exists(folder):
+        logging.info(f"Removing {folder}")
+        shutil.rmtree(folder)
+    logging.info(f"Creating {folder}")
+    os.mkdir(folder)
 
-folder_base_models = os.path.join(base_dir, 'MODELS')
+folder_models = os.path.join(base_dir, 'results-question-7')
+create_remove_folder(folder_models)
+
 folder_data = os.path.join(base_dir, 'DATA')
 result_folder = os.path.join(folder_models, f'result-{non_terminals}')
 
-result_file = os.path.join(result_folder, f"results-{non_terminals}.txt")
+result_file = os.path.join(folder_models, f"results-{non_terminals}.txt")
 
 if os.path.exists(result_file):
   os.remove(result_file)
@@ -28,7 +51,9 @@ test_grammar_command = os.path.join(base_dir, 'scfg-toolkit/scfg_gstr')
 check_triangle_command = os.path.join(base_dir, 'scfg-toolkit/checkTriangle')
 
 model = 'Gt'
-base_grammar = os.path.join(folder_models, f'G-triangle-{non_terminals}')
+base_grammar = os.path.join(base_dir, f"grammars/{base_grammar_name}")
+if not os.path.exists(base_grammar):
+    raise ValueError(f"Grammar {base_grammar} not exists. Execute grammars.py script for generate it")
 base_grammar_custom_non_terminals = os.path.join(result_folder, model)
 
 # copy base grammar
@@ -43,6 +68,7 @@ output = stream.read()
 
 with open(result_file, "a") as myfile:
     myfile.write(f'{"likeliklyhood":>15s} {"time":>7s} {"words":>7s} {"iteration":>11s}\n')
+
 for iteration in range(iterations):
     output_model = f'new-Gt-{iteration}'
 
