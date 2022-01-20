@@ -32,10 +32,13 @@ def create_remove_folder(folder):
     os.mkdir(folder)
 
 folder_models = os.path.join(base_dir, 'results-question-7')
-create_remove_folder(folder_models)
+if not os.path.exists(folder_models):
+    logging.info(f"Creating {folder_models}")
+    os.mkdir(folder_models)
 
 folder_data = os.path.join(base_dir, 'DATA')
 result_folder = os.path.join(folder_models, f'result-{non_terminals}')
+create_remove_folder(result_folder)
 
 commands_file = os.path.join(result_folder, 'log-commands.txt')
 if os.path.exists(commands_file):
@@ -61,10 +64,6 @@ if not os.path.exists(base_grammar):
 base_grammar_custom_non_terminals = os.path.join(result_folder, model)
 
 # copy base grammar
-if os.path.exists(result_folder):
-    shutil.rmtree(result_folder)
-os.mkdir(result_folder)
-
 command = f"{generate_first_grammar_command} -g {base_grammar} -f {base_grammar_custom_non_terminals}"
 print(command)
 with open(commands_file, 'a') as logs:
