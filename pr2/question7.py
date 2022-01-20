@@ -14,7 +14,6 @@ parser = argparse.ArgumentParser(description='Executes question 7 of PEE. This s
 parser.add_argument('dir', type=str, help='Base directory of PCFG')
 parser.add_argument('-i', '--iterations', default=500, help='Iterations number for model generation')
 parser.add_argument('-nt', '--nterminals', default=20, help='Number of non terminals')
-parser.add_argument('-g', '--grammar', default='G-triangle-5', help='Base grammar name')
 
 args = parser.parse_args()
 
@@ -22,7 +21,7 @@ args = parser.parse_args()
 base_dir = args.dir
 non_terminals = args.nterminals
 iterations = args.iterations
-base_grammar_name = args.grammar
+base_grammar_name = f'G-triangle-{non_terminals}'
 
 def create_remove_folder(folder):
     if os.path.exists(folder):
