@@ -151,7 +151,7 @@ for length in train_lengths:
 
         create_line_confus(test_right_data, 'right', r'{m=$1;argm="right"; if ($2>m) {m=$2;argm="equil";} if ($3>m) {m=$3;argm="isosc";}printf("right %s\n",argm);}')
         create_line_confus(test_equil_data, 'equil', r'{m=$2;argm="equil"; if ($1>m) {m=$1;argm="right";} if ($3>m) {m=$3;argm="isosc";} printf("equil %s\n",argm);}')
-        create_line_confus(test_equil_data, 'isoc', r'{m=$3;argm="isosc"; if ($1>m) {m=$1;argm="right";} if ($2>m) {m=$2;argm="equil";} printf("isosc %s\n",argm);}')
+        create_line_confus(test_isoc_data, 'isoc', r'{m=$3;argm="isosc"; if ($1>m) {m=$1;argm="right";} if ($2>m) {m=$2;argm="equil";} printf("isosc %s\n",argm);}')
 
         command = f"cat {results_file} | {confus_command}"
         confus_output = execute(command, commands_file)
